@@ -1,0 +1,84 @@
+'''
+*------------------------------------------------------------------*
+* Fatec São Caetano do Sul *
+* Atividade B2-2 *
+* Autora: Ana Beatriz Gonçalves *
+* Objetivo: Sistema de fila de impressão com prioridade *
+* Data: 28/04/2026 *
+*------------------------------------------------------------------*
+'''
+
+from collections import deque
+
+
+class SistemaImpressao:
+    def __init__(self):
+        self.adm = deque()
+        self.aluno = deque()
+
+    def adicionar(self, tipo, nome, ano, paginas):
+        documento = {
+            "nome": nome,
+            "ano": ano,
+            "paginas": paginas
+        }
+
+        if tipo.upper() == "ADM":
+            self.adm.append(documento)
+
+        elif tipo.upper() == "ALUNO":
+            self.aluno.append(documento)
+
+        else:
+            print("Tipo inválido.")
+
+    def listar_estado(self):
+        print("\nQuantidade de documentos:")
+        print("ADM:", len(self.adm))
+        print("ALUNO:", len(self.aluno))
+
+    def listar_filas(self):
+        print("\n--- FILA ADM ---")
+        for doc in self.adm:
+            print(f"{doc['nome']} | {doc['paginas']} páginas")
+
+        print("\n--- FILA ALUNO ---")
+        for doc in self.aluno:
+            print(f"{doc['nome']} | {doc['paginas']} páginas")
+
+    def consumir(self):
+        if self.adm:
+            doc = self.adm.popleft()
+            print(f"\nProcessando documento ADM: {doc['nome']}")
+
+        elif self.aluno:
+            doc = self.aluno.popleft()
+            print(f"\nProcessando documento ALUNO: {doc['nome']}")
+
+        else:
+            print("\nNão há documentos nas filas.")
+
+    def reorganizar(self, tipo):
+        if tipo.upper() == "ADM":
+            self.adm = deque(sorted(self.adm, key=lambda x: x["paginas"]))
+
+        elif tipo.upper() == "ALUNO":
+            self.aluno = deque(sorted(self.aluno, key=lambda x: x["paginas"]))
+
+        else:
+            print("Tipo inválido.")
+
+
+# Teste do sistema
+impressao = SistemaImpressao()
+
+impressao.adicionar("ALUNO", "Trabalho_A", 2024, 20)
+impressao.adicionar("ADM", "Relatorio_X", 2024, 10)
+impressao.adicionar("ALUNO", "Tarefa_B", 2024, 5)
+
+impressao.listar_estado()
+impressao.reorganizar("ALUNO")
+impressao.listar_filas()
+
+impressao.consumir()
+impressao.consumir()
